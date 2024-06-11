@@ -1,0 +1,277 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<pnml>
+  <net id="imported_1717046191.4316669" type="http://www.pnml.org/version-2009/grammar/pnmlcoremodel">
+    <name>
+      <text>imported_1717046191.4316669</text>
+    </name>
+    <page id="n0">
+      <place id="n3">
+        <name>
+          <text>Payment</text>
+        </name>
+        <graphics>
+          <position x="11.25" y="11.25"/>
+          <dimension x="12.5" y="12.5"/>
+        </graphics>
+      </place>
+      <place id="n2">
+        <name>
+          <text>net sink</text>
+        </name>
+        <graphics>
+          <position x="11.25" y="11.25"/>
+          <dimension x="12.5" y="12.5"/>
+        </graphics>
+      </place>
+      <place id="n6">
+        <name>
+          <text>Send Fine</text>
+        </name>
+        <graphics>
+          <position x="11.25" y="11.25"/>
+          <dimension x="12.5" y="12.5"/>
+        </graphics>
+      </place>
+      <place id="n1">
+        <name>
+          <text>net source</text>
+        </name>
+        <initialMarking>
+          <text>1</text>
+        </initialMarking>
+        <graphics>
+          <position x="11.25" y="11.25"/>
+          <dimension x="12.5" y="12.5"/>
+        </graphics>
+      </place>
+      <place id="n4">
+        <name>
+          <text>Add penalty</text>
+        </name>
+        <graphics>
+          <position x="11.25" y="11.25"/>
+          <dimension x="12.5" y="12.5"/>
+        </graphics>
+      </place>
+      <place id="n5">
+        <name>
+          <text>Insert Fine Notification</text>
+        </name>
+        <graphics>
+          <position x="11.25" y="11.25"/>
+          <dimension x="12.5" y="12.5"/>
+        </graphics>
+      </place>
+      <place id="n7">
+        <name>
+          <text>Create Fine</text>
+        </name>
+        <graphics>
+          <position x="11.25" y="11.25"/>
+          <dimension x="12.5" y="12.5"/>
+        </graphics>
+      </place>
+      <transition id="n18">
+        <name>
+          <text>n18</text>
+        </name>
+        <toolspecific tool="StochasticPetriNet" version="0.2">
+          <property key="distributionType">UNIFORM</property>
+          <property key="distributionParameters">0.0;200.0</property>
+          <property key="priority">0</property>
+          <property key="invisible">true</property>
+          <property key="weight">0.4115296144</property>
+        </toolspecific>
+        <graphics>
+          <position x="12.5" y="12.5"/>
+          <dimension x="15.0" y="15.0"/>
+        </graphics>
+        <toolspecific tool="ProM" version="6.4" activity="$invisible$" localNodeID="1b4b632a-66f1-4ad7-bf26-a0645fa37cd3"/>
+      </transition>
+      <transition id="n8">
+        <name>
+          <text>n8</text>
+        </name>
+        <toolspecific tool="StochasticPetriNet" version="0.2">
+          <property key="distributionType">UNIFORM</property>
+          <property key="distributionParameters">0.0;200.0</property>
+          <property key="priority">0</property>
+          <property key="invisible">true</property>
+          <property key="weight">0.0000100000</property>
+        </toolspecific>
+        <graphics>
+          <position x="12.5" y="12.5"/>
+          <dimension x="15.0" y="15.0"/>
+        </graphics>
+        <toolspecific tool="ProM" version="6.4" activity="$invisible$" localNodeID="5e5fea23-fbfc-4536-b8cc-94effaaf7a2f"/>
+      </transition>
+      <transition id="n11">
+        <name>
+          <text>Send for Credit Collection</text>
+        </name>
+        <toolspecific tool="StochasticPetriNet" version="0.2">
+          <property key="distributionType">UNIFORM</property>
+          <property key="distributionParameters">0.0;200.0</property>
+          <property key="priority">0</property>
+          <property key="invisible">false</property>
+          <property key="weight">0.1740511836</property>
+        </toolspecific>
+        <graphics>
+          <position x="17.5" y="15.0"/>
+          <dimension x="25.0" y="20.0"/>
+        </graphics>
+      </transition>
+      <transition id="n9">
+        <name>
+          <text>Payment</text>
+        </name>
+        <toolspecific tool="StochasticPetriNet" version="0.2">
+          <property key="distributionType">UNIFORM</property>
+          <property key="distributionParameters">0.0;200.0</property>
+          <property key="priority">0</property>
+          <property key="invisible">false</property>
+          <property key="weight">0.0807009455</property>
+        </toolspecific>
+        <graphics>
+          <position x="17.5" y="15.0"/>
+          <dimension x="25.0" y="20.0"/>
+        </graphics>
+      </transition>
+      <transition id="n12">
+        <name>
+          <text>Add penalty</text>
+        </name>
+        <toolspecific tool="StochasticPetriNet" version="0.2">
+          <property key="distributionType">UNIFORM</property>
+          <property key="distributionParameters">0.0;200.0</property>
+          <property key="priority">0</property>
+          <property key="invisible">false</property>
+          <property key="weight">0.1000085884</property>
+        </toolspecific>
+        <graphics>
+          <position x="17.5" y="15.0"/>
+          <dimension x="25.0" y="20.0"/>
+        </graphics>
+      </transition>
+      <transition id="n10">
+        <name>
+          <text>Payment</text>
+        </name>
+        <toolspecific tool="StochasticPetriNet" version="0.2">
+          <property key="distributionType">UNIFORM</property>
+          <property key="distributionParameters">0.0;200.0</property>
+          <property key="priority">0</property>
+          <property key="invisible">false</property>
+          <property key="weight">0.0552306485</property>
+        </toolspecific>
+        <graphics>
+          <position x="17.5" y="15.0"/>
+          <dimension x="25.0" y="20.0"/>
+        </graphics>
+      </transition>
+      <transition id="n13">
+        <name>
+          <text>Insert Fine Notification</text>
+        </name>
+        <toolspecific tool="StochasticPetriNet" version="0.2">
+          <property key="distributionType">UNIFORM</property>
+          <property key="distributionParameters">0.0;200.0</property>
+          <property key="priority">0</property>
+          <property key="invisible">false</property>
+          <property key="weight">0.1875207427</property>
+        </toolspecific>
+        <graphics>
+          <position x="17.5" y="15.0"/>
+          <dimension x="25.0" y="20.0"/>
+        </graphics>
+      </transition>
+      <transition id="n14">
+        <name>
+          <text>Payment</text>
+        </name>
+        <toolspecific tool="StochasticPetriNet" version="0.2">
+          <property key="distributionType">UNIFORM</property>
+          <property key="distributionParameters">0.0;200.0</property>
+          <property key="priority">0</property>
+          <property key="invisible">false</property>
+          <property key="weight">0.1643569440</property>
+        </toolspecific>
+        <graphics>
+          <position x="17.5" y="15.0"/>
+          <dimension x="25.0" y="20.0"/>
+        </graphics>
+      </transition>
+      <transition id="n15">
+        <name>
+          <text>Send Fine</text>
+        </name>
+        <toolspecific tool="StochasticPetriNet" version="0.2">
+          <property key="distributionType">UNIFORM</property>
+          <property key="distributionParameters">0.0;200.0</property>
+          <property key="priority">0</property>
+          <property key="invisible">false</property>
+          <property key="weight">0.2803250317</property>
+        </toolspecific>
+        <graphics>
+          <position x="17.5" y="15.0"/>
+          <dimension x="25.0" y="20.0"/>
+        </graphics>
+      </transition>
+      <transition id="n16">
+        <name>
+          <text>Create Fine</text>
+        </name>
+        <toolspecific tool="StochasticPetriNet" version="0.2">
+          <property key="distributionType">UNIFORM</property>
+          <property key="distributionParameters">0.0;200.0</property>
+          <property key="priority">0</property>
+          <property key="invisible">false</property>
+          <property key="weight">0.4779118991</property>
+        </toolspecific>
+        <graphics>
+          <position x="17.5" y="15.0"/>
+          <dimension x="25.0" y="20.0"/>
+        </graphics>
+      </transition>
+      <transition id="n17">
+        <name>
+          <text>n17</text>
+        </name>
+        <toolspecific tool="StochasticPetriNet" version="0.2">
+          <property key="distributionType">UNIFORM</property>
+          <property key="distributionParameters">0.0;200.0</property>
+          <property key="priority">0</property>
+          <property key="invisible">true</property>
+          <property key="weight">0.0513764432</property>
+        </toolspecific>
+        <graphics>
+          <position x="12.5" y="12.5"/>
+          <dimension x="15.0" y="15.0"/>
+        </graphics>
+        <toolspecific tool="ProM" version="6.4" activity="$invisible$" localNodeID="72db6dd2-be58-4bff-a377-0965e732c643"/>
+      </transition>
+      <arc id="13864743696" source="n14" target="n3"/>
+      <arc id="13864701328" source="n15" target="n6"/>
+      <arc id="13864701712" source="n4" target="n10"/>
+      <arc id="13864743312" source="n18" target="n2"/>
+      <arc id="13864744080" source="n3" target="n9"/>
+      <arc id="13864743600" source="n5" target="n12"/>
+      <arc id="13864701232" source="n3" target="n18"/>
+      <arc id="13864701616" source="n1" target="n8"/>
+      <arc id="13864743216" source="n10" target="n3"/>
+      <arc id="13864743984" source="n17" target="n2"/>
+      <arc id="13864743504" source="n8" target="n2"/>
+      <arc id="13864743888" source="n16" target="n7"/>
+      <arc id="13864701520" source="n13" target="n5"/>
+      <arc id="13864701904" source="n7" target="n14"/>
+      <arc id="13864743120" source="n9" target="n3"/>
+      <arc id="13864744272" source="n11" target="n2"/>
+      <arc id="13864743408" source="n6" target="n13"/>
+      <arc id="13864743792" source="n12" target="n4"/>
+      <arc id="13864701424" source="n6" target="n17"/>
+      <arc id="13864701808" source="n4" target="n11"/>
+      <arc id="13864743024" source="n7" target="n15"/>
+      <arc id="13864744176" source="n1" target="n16"/>
+    </page>
+  </net>
+</pnml>

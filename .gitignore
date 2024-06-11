@@ -1,5 +1,7 @@
-/data
 /test
+
+*.xes
+*.slpn
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
