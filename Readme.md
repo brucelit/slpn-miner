@@ -8,6 +8,11 @@ SLPNMiner is a ProM package for the discovery of Stochastic Labelled Petri net, 
 * Unit Earth Mover Stochastic Conformance:
 [Sander J. J. Leemans, Wil M. P. van der Aalst, Tobias Brockhoff, Artem Polyvyanyy: Stochastic process mining: Earth movers' stochastic conformance. Inf. Syst. 102: 101724 (2021)](https://www.sciencedirect.com/science/article/pii/S0306437921001277)
 
+## Note
+This is a re-implementation of ProM plugin-in for stochastic labelled Petri net discovery. We use a better global optimisation solver that produces better results than the original implementation.
+
+For large event log, the converging time for the optimisation may be long. We recommend starting from a smaller model for testing.
+
 ## Usage
 Take the Entropic Relevance-based stochastic discovery algorithm as an example, the input are an event log and a Petri net model, and the output is a stochastic labelled Petri net. The following is the code snippet to use the Entropic Relevance-based stochastic discovery algorithm. 
 

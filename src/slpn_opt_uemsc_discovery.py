@@ -7,7 +7,8 @@ from src.slpn_visualiser import visualize_slpn, view
 from symbolic_conversion import calculate_inverse_poland_expression, get_inverse_poland_expression
 from pm4py.objects.log.importer.xes import importer as xes_importer
 from util import setup, get_slpn
-from slpn_exporter import export_slpn
+from slpn_exporter import export_slpn, export_slpn_xml
+
 
 def optimize_with_uemsc(log, pn, im, fm):
     # setup the preliminaries
@@ -62,10 +63,10 @@ def get_uemsc_obj_func(obj2add, var_name2idx_map):
 
 if __name__ == '__main__':
     # import log
-    log = xes_importer.apply('../data/sepsis/Sepsis Cases - Event Log.xes')
+    log = xes_importer.apply('../data/offer/BPI_Challenge_2017 - Offer log.xes')
 
     #  import petri nets
-    pn, im, fm = pm4py.read_pnml('../data/sepsis/sepsis_id02.pnml', auto_guess_final_marking=True)
+    pn, im, fm = pm4py.read_pnml('../data/offer/offer_id0.2.pnml', auto_guess_final_marking=True)
 
     # optimize by maximizing the uEMSC objective function
     trans_weight_dict = optimize_with_uemsc(log, pn, im, fm)
@@ -75,5 +76,8 @@ if __name__ == '__main__':
     gviz = visualize_slpn(pn, trans_weight_dict, initial_marking=im,final_marking=fm)
     view(gviz)
 
-    # export the slpn
-    export_slpn("../data/sepsis/sepsis_id02_uemsc.slpn", place_in_im_num, place2num, t2l, t2ip_num, t2op_num, trans_weight_dict)
+    # export .slpn formart slpn
+    # export_slpn("../data/offer/offer_id02_uemsc.slpn", place_in_im_num, place2num, t2l, t2ip_num, t2op_num, trans_weight_dict)
+
+    # export .xml format slpn
+    export_slpn_xml("../data/offer/offer_id02_uemsc_spn.pnml", pn,im, trans_weight_dict)
