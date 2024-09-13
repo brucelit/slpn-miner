@@ -109,27 +109,6 @@ def export_slpn_xml(output_path, petrinet, marking, trans2weight, final_marking=
             dimension = etree.SubElement(graphics, "dimension")
             dimension.set("x", str(transition.properties[constants.LAYOUT_INFORMATION_PETRI][1][0]))
             dimension.set("y", str(transition.properties[constants.LAYOUT_INFORMATION_PETRI][1][1]))
-        if constants.STOCHASTIC_DISTRIBUTION in transition.properties:
-            random_variable = transition.properties[constants.STOCHASTIC_DISTRIBUTION]
-            stochastic_information = etree.SubElement(trans, "toolspecific")
-            stochastic_information.set("tool", "StochasticPetriNet")
-            stochastic_information.set("version", "0.2")
-            distribution_type = etree.SubElement(stochastic_information, "property")
-            distribution_type.set("key", "distributionType")
-            distribution_type.text = random_variable.get_distribution_type()
-            if not random_variable.get_distribution_type() == "IMMEDIATE":
-                distribution_parameters = etree.SubElement(stochastic_information, "property")
-                distribution_parameters.set("key", "distributionParameters")
-                distribution_parameters.text = random_variable.get_distribution_parameters()
-            distribution_priority = etree.SubElement(stochastic_information, "property")
-            distribution_priority.set("key", "priority")
-            distribution_priority.text = str(random_variable.get_priority())
-            distribution_invisible = etree.SubElement(stochastic_information, "property")
-            distribution_invisible.set("key", "invisible")
-            distribution_invisible.text = str(True if transition.label is None else False).lower()
-            distribution_weight = etree.SubElement(stochastic_information, "property")
-            distribution_weight.set("key", "weight")
-            distribution_weight.text = str(random_variable.get_weight())
         if transition.label is not None:
             trans_text.text = transition.label
         else:

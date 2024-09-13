@@ -26,7 +26,6 @@ def get_equation_system(cross_product, initial_state, final_state):
         state_to_variable_map[state] = variable_name
         state_idx += 1
 
-    # trans_idx = 0
     for transition in cross_product.transitions:
         if transition.to_state in cross_product.connected_states and transition.from_state in cross_product.connected_states:
             variable_name = Symbol(f'{transition.new_transition_name}')
@@ -43,8 +42,10 @@ def get_equation_system(cross_product, initial_state, final_state):
         eqs.append(eq)
 
     sols = solve(eqs, variables)
-    variable_name = Symbol(f'a0', positive=True)
+    if len(sols) == 0:
+        return str(0)
 
+    variable_name = Symbol(f'a0', positive=True)
     input_string = str(sols[variable_name])
     # for transition in cross_product.transitions:
     return input_string

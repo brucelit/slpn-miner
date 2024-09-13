@@ -120,13 +120,12 @@ class ConstructCP:
             # print("have a final state: ", str(trace_final_state) + str(rsg_final_state))
             cross_product_final_state = str(trace_final_state) + str(rsg_final_state)
         else:
-            print("no final state")
+            return "0"
 
         if (self.cross_product.get_state_by_name(str(trace_initial_state) + str(rsg_initial_state))) is not None:
-            # print("have an initial state: ", str(trace_initial_state) + str(rsg_initial_state))
             cross_product_initial_state = str(trace_initial_state) + str(rsg_initial_state)
         else:
-            print("no initial state")
+            return "0"
 
         # construc_equation_system()
         initial_state = self.cross_product.get_state_by_name(cross_product_initial_state)

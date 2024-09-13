@@ -1,16 +1,16 @@
 import pandas as pd
+import fractions
+
 from pm4py.algo.filtering.log.variants import variants_filter
 from pm4py.objects.log.importer.xes import importer as xes_importer
 from pm4py.objects.log.exporter.xes import exporter as xes_exporter
 from typing import Dict, Union, List, Any
 from typing import Optional
-
 from pm4py.objects.log.obj import EventStream, EventLog, Trace
 from pm4py.objects.conversion.log import converter as log_converter
 from pm4py.statistics.variants.log.get import get_variants_from_log_trace_idx, convert_variants_trace_idx_to_trace_obj, \
     Parameters
 from pm4py.util import variants_util
-import fractions
 
 
 def get_variant(import_path, export_path):
@@ -55,7 +55,6 @@ def get_trace_weight_dict(*args, **kwargs) -> Dict[List[str], fractions.Fraction
         for x in vars:
 
             vars[x] = fractions.Fraction(vars[x], all_values_sum)
-            # vars[x] = vars[x] / all_values_sum
         return vars
 
 def get_variants(log: EventLog, parameters: Optional[Dict[Union[str, Parameters], Any]] = None) -> Union[
@@ -111,4 +110,4 @@ def export_stochastic_language(import_path, export_path):
 if __name__ == '__main__':
     # export_stochastic_language("../data/road/rtf_2000.xes", "../data/road/rtf2000.slang")
 
-    get_variant("../data/road/rtf_2000.xes", "../data/road/rtf2000_variants.xes")
+    get_variant("../data/prAm6/prAm6.xes", "../data/prAm6/prAm6_variants.xes")

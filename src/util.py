@@ -2,7 +2,6 @@ import re
 
 from pm4py.algo.conformance.alignments.petri_net import algorithm as alignments
 from pm4py.objects.log.obj import EventLog, Trace
-
 from src.log_util import get_stochastic_language
 from stochastic_cross_product import ConstructCP
 from slang_importer import parse_slang_file
@@ -47,23 +46,20 @@ def setup(log, pn, im, fm):
     for trace, weight in trace_prob_dict.items():
         for i in range(len(log_variants)):
             if trace == tuple(event['concept:name'] for event in log_variants[i]):
-                alignments_result = alignments.apply_trace(log_variants[i], pn, im, fm)
-                
-                # check whether fitness is 1.00, if so, then the trace is fitting the model
-                if alignments_result['fitness'] == 1:
-                    # print("Trace is fitting the model",trace,weight)
-                    # get trace probability
-                    weight_result = float(weight)
-                    # get trace incoming and outgoing transitions
-                    trace_ot, trace_it = create_dfa_from_list([event['concept:name'] for event in log_variants[i]])
-                    CP = ConstructCP()
-                    symbolic_trace_prob = CP.get_cross_product(trace_it,
-                                                               trace_ot,
-                                                               srg_it,
-                                                               srg_ot)
-                    sub_obj = [symbolic_trace_prob, weight_result]
-                    obj2add.append(sub_obj)
-                    break
+                #   get trace probability
+                weight_result = float(weight)
+                # get trace incoming and outgoing transitions
+                trace_ot, trace_it = create_dfa_from_list([event['concept:name'] for event in log_variants[i]])
+                CP = ConstructCP()
+                symbolic_trace_prob = CP.get_cross_product(trace_it,
+                                                           trace_ot,
+                                                           srg_it,
+                                                           srg_ot)
+                print("weight: ", weight, symbolic_trace_prob)
+
+                sub_obj = [symbolic_trace_prob, weight_result]
+                obj2add.append(sub_obj)
+                break
     return obj2add, var_name2idx_map, var_idx2name_map, var_lst
 
 

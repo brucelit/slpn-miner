@@ -1,8 +1,7 @@
-import sys
-
 import pm4py
 import scipy
 
+from pm4py.objects.petri_net.utils import final_marking, initial_marking
 from src.slpn_visualiser import visualize_slpn, view
 from symbolic_conversion import calculate_inverse_poland_expression, get_inverse_poland_expression
 from pm4py.objects.log.importer.xes import importer as xes_importer
@@ -32,7 +31,7 @@ def optimize_with_basin_hopping(var_lst, obj_func):
     :return: the variable list that maximize er or uemsc-based measure
     '''
     # add constraint such that every var is between 0 and 1
-    bds = [(sys.float_info.min, 1) for i in range(len(var_lst))]
+    bds = [(0.0001, 1) for i in range(len(var_lst))]
     # define the method and bound
     minimizer_kwargs = {"method": "L-BFGS-B", "bounds": bds}
     # solve problem
@@ -55,7 +54,7 @@ def get_uemsc_obj_func(obj2add, var_name2idx_map):
                 get_inverse_poland_expression(trace_symbolic_prob), var_name2idx_map, x)
             after_inverse = max(trace_real_prob - trace_in_slpn_prob, 0)
             obj_func += after_inverse
-        # print("uemsc_objective_function:", obj_func)
+        # print("uemsc:", obj_func)
 
         return obj_func
     return uemsc_objective_function
@@ -63,10 +62,12 @@ def get_uemsc_obj_func(obj2add, var_name2idx_map):
 
 if __name__ == '__main__':
     # import log
-    log = xes_importer.apply('../data/offer/BPI_Challenge_2017 - Offer log.xes')
+    log = xes_importer.apply('../data/road/Road_Traffic_Fine_Management_Process.xes')
 
     #  import petri nets
-    pn, im, fm = pm4py.read_pnml('../data/offer/offer_id0.2.pnml', auto_guess_final_marking=True)
+    pn, im, fm = pm4py.read_pnml('../data/road/rtfm_hm_abe.pnml', auto_guess_final_marking=True)
+    fm = final_marking.discover_final_marking(pn)
+    im = initial_marking.discover_initial_marking(pn)
 
     # optimize by maximizing the uEMSC objective function
     trans_weight_dict = optimize_with_uemsc(log, pn, im, fm)
@@ -77,7 +78,7 @@ if __name__ == '__main__':
     view(gviz)
 
     # export .slpn formart slpn
-    # export_slpn("../data/offer/offer_id02_uemsc.slpn", place_in_im_num, place2num, t2l, t2ip_num, t2op_num, trans_weight_dict)
+    # export_slpn("../data/hospital/hospital_id02_uemsc.slpn", place_in_im_num, place2num, t2l, t2ip_num, t2op_num, trans_weight_dict)
 
     # export .xml format slpn
-    export_slpn_xml("../data/offer/offer_id02_uemsc_spn.pnml", pn,im, trans_weight_dict)
+    export_slpn_xml("../data/road/rtf_heuristic_uemsc.pnml", pn,im, trans_weight_dict)

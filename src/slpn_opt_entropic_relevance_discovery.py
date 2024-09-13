@@ -8,7 +8,8 @@ from src.slpn_visualiser import visualize_slpn, view
 from symbolic_conversion import calculate_inverse_poland_expression, get_inverse_poland_expression
 from pm4py.objects.log.importer.xes import importer as xes_importer
 from util import setup, get_slpn
-from slpn_exporter import export_slpn
+from slpn_exporter import export_slpn, export_slpn_xml
+
 
 def optimize_with_er(log, pn, im, fm):
     # setup the preliminaries
@@ -53,7 +54,7 @@ def optimize_with_basin_hopping(var_lst, obj_func):
     :return: the variable list that maximize er or uemsc-based measure
     '''
     # add constraint such that every var is between 0 and 1
-    bds = [(sys.float_info.min, 1) for i in range(len(var_lst))]
+    bds = [(0.0001, 1) for i in range(len(var_lst))]
     # define the method and bound
     minimizer_kwargs = {"method": "L-BFGS-B", "bounds": bds}
     # solve problem
@@ -64,19 +65,21 @@ def optimize_with_basin_hopping(var_lst, obj_func):
 
 if __name__ == '__main__':
     # import log
-    log = xes_importer.apply('../data/domestic/BPI_Challenge_2020_DomesticDeclarations.xes')
+    log = xes_importer.apply('../data/hospital/Hospital Billing - Event Log.xes')
 
     #  import petri nets
-    pn, im, fm = pm4py.read_pnml('../data/domestic/domestic_df0.9.pnml', auto_guess_final_marking=True)
+    pn, im, fm = pm4py.read_pnml('../data/hospital/hospital_df09.pnml', auto_guess_final_marking=True)
 
     # optimize by maximizing the uEMSC objective function
     trans_weight_dict = optimize_with_er(log, pn, im, fm)
     place_in_im_num, place2num, t2l, t2op_num, t2ip_num = get_slpn(pn, im)
 
-    # visualize the slpn
+    # # visualize the slpn
     gviz = visualize_slpn(pn, trans_weight_dict, initial_marking=im, final_marking=fm)
     view(gviz)
 
     # export the slpn
-    export_slpn("../data/domestic/domestic_df09_er.slpn", place_in_im_num, place2num, t2l, t2ip_num, t2op_num,
-                trans_weight_dict)
+    export_slpn("../data/hospital/hospital_df09_er.slpn", place_in_im_num, place2num, t2l, t2ip_num, t2op_num, trans_weight_dict)
+
+    # export xml slpn
+    # export_slpn_xml("../data/hospital/hospital_df09_er.pnml", pn, im, trans_weight_dict)
