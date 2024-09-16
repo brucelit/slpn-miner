@@ -20,6 +20,7 @@ Change the input and output path for your log and petri net, and slpn in the mai
 
 ```python
 import pm4py
+import logging
 
 from pm4py.objects.petri_net.utils import final_marking, initial_marking
 from src.slpn_opt_uemsc_discovery import optimize_with_uemsc
@@ -27,6 +28,8 @@ from src.slpn_visualiser import visualize_slpn, view
 from pm4py.objects.log.importer.xes import importer as xes_importer
 from util import get_slpn
 from slpn_exporter import export_slpn, export_slpn_xml
+
+logging.getLogger().setLevel(logging.INFO)
 
 
 if __name__ == '__main__':
@@ -41,6 +44,15 @@ if __name__ == '__main__':
     # optimize by maximizing the uEMSC objective function
     trans_weight_dict = optimize_with_uemsc(log, pn, im, fm)
     place_in_im_num, place2num, t2l, t2op_num, t2ip_num = get_slpn(pn, im)
+    
+       # perform soundness and wof analysis for the imported model
+    soundness_result = check_soundness.check_easy_soundness_of_wfnet(pn)
+    wof_result = check_soundness.check_wfnet(pn)
+    if not soundness_result:
+        logging.error("The imported model is not easy sound")
+    if not wof_result:
+        logging.error("The imported model is not a work flow net")
+
 
     # visualize the slpn
     gviz = visualize_slpn(pn, trans_weight_dict, initial_marking=im,final_marking=fm)
