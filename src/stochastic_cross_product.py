@@ -1,11 +1,14 @@
 # construct a cross product between stochastic reachability graph of the petri net and a trace dfa
 
 import copy
+import logging
 import re
 import stochastic_transition_system
 
 from stochastic_equation_system import get_equation_system, expand_powers
 from stochastic_transition_system import StochasticTransitionSystem
+
+logging.getLogger().setLevel(logging.DEBUG)
 
 
 def set_and_get_initial_state(trace_incoming_transitions,
@@ -54,8 +57,7 @@ class ConstructCP:
 
         try:
             # set the initial state for cross product system
-            trace_init_state, srg_init_state = set_and_get_initial_state(trace_incoming_transitions,
-                                                                         srg_incoming_transitions)
+            trace_init_state, srg_init_state = set_and_get_initial_state(trace_incoming_transitions, srg_incoming_transitions)
         except TypeError:
             raise SystemExit(
                 "No initial state found for the stochastic reachability graph. Please check the input petri net.")
@@ -70,18 +72,17 @@ class ConstructCP:
         while trace_outgoing_transitions[trace_current_state] is not None:
             # get the transition label from trace
             trace_transition_label = trace_outgoing_transitions[trace_current_state][0]
-
             temp_boundary_in_rsg = copy.copy(self.boundary_states_in_rsg)
 
             for srg_state_to_explore, flag in self.boundary_states_in_rsg.items():
-                # if the transtion is fired in this state
+                # if the transition is fired in this state
                 if flag is False:
                     del temp_boundary_in_rsg[srg_state_to_explore]
                     continue
                 temp_boundary_in_rsg[srg_state_to_explore] = False
 
             for srg_state_to_explore, flag in temp_boundary_in_rsg.items():
-                # if the transtion is fired in this state
+                # if the transition is fired in this state
                 self.get_match_states(trace_outgoing_transitions,
                                       trace_transition_label,
                                       trace_current_state,
@@ -91,17 +92,18 @@ class ConstructCP:
 
             # continue with the next state in trace
             trace_current_state = trace_outgoing_transitions[trace_current_state][1]
-            # print("boundary after:", boundary_states_in_rsg)
 
         trace_final_state = ""
         for state, key in trace_outgoing_transitions.items():
             if key is None:
                 trace_final_state = state
 
+        rsg_final_state_set = set()
         rsg_final_state = ""
         for state, key in srg_outgoing_transitions.items():
             if len(key) == 0:
                 rsg_final_state = state.name
+                rsg_final_state_set.add(rsg_final_state)
 
         trace_init_state = ""
         for state, key in trace_incoming_transitions.items():
@@ -113,35 +115,43 @@ class ConstructCP:
         for state, key in srg_incoming_transitions.items():
             if len(key) == 0:
                 rsg_initial_state = state.name
+        trace_prob = "0"
 
-        cross_product_final_state = ""
-        cross_product_initial_state = ""
-        if (self.cross_product.get_state_by_name(str(trace_final_state) + str(rsg_final_state))) is not None:
-            # print("have a final state: ", str(trace_final_state) + str(rsg_final_state))
-            cross_product_final_state = str(trace_final_state) + str(rsg_final_state)
-        else:
-            return "0"
+        for rsg_final_state in rsg_final_state_set:
+            if (self.cross_product.get_state_by_name(str(trace_final_state) + str(rsg_final_state))) is not None:
+                # print("have a final state: ", str(trace_final_state) + str(rsg_final_state))
+                cross_product_final_state = str(trace_final_state) + str(rsg_final_state)
+            else:
+                trace_prob = "0"
+                continue
 
-        if (self.cross_product.get_state_by_name(str(trace_initial_state) + str(rsg_initial_state))) is not None:
-            cross_product_initial_state = str(trace_initial_state) + str(rsg_initial_state)
-        else:
-            return "0"
+            if (self.cross_product.get_state_by_name(str(trace_initial_state) + str(rsg_initial_state))) is not None:
+                cross_product_initial_state = str(trace_initial_state) + str(rsg_initial_state)
+            else:
+                trace_prob = "0"
+                continue
 
-        # construc_equation_system()
-        initial_state = self.cross_product.get_state_by_name(cross_product_initial_state)
-        final_state = self.cross_product.get_state_by_name(cross_product_final_state)
+            # construc_equation_system()
+            initial_state = self.cross_product.get_state_by_name(cross_product_initial_state)
+            final_state = self.cross_product.get_state_by_name(cross_product_final_state)
 
-        self.connected_to_initial_state(initial_state)
-        self.connected_to_final_state(final_state)
-        self.connected(initial_state, final_state)
+            self.connected_to_initial_state(initial_state)
+            self.connected_to_final_state(final_state)
+            self.connected(initial_state, final_state)
 
-        trace_prob = get_equation_system(self.cross_product, initial_state, final_state)
+            trace_prob = get_equation_system(self.cross_product, initial_state, final_state)
+            if trace_prob != "0":
+                break
 
-        pattern = r't\d+'
-        # Replace substrings using re.sub with the replace_match function
-        s = re.sub(pattern, self.replace_variables, expand_powers(trace_prob))
-        updated_trace_prob = s.replace("1*", "")
-        return updated_trace_prob
+        if trace_prob != "0":
+            pattern = r't\d+'
+            # Replace substrings using re.sub with the replace_match function
+            s = re.sub(pattern, self.replace_variables, expand_powers(trace_prob))
+            updated_trace_prob = s.replace("1*", "")
+            return updated_trace_prob
+
+        logging.debug("Cannot derive the probability of this trace from model.")
+        return "0"
 
     def replace_variables(self, match):
         variable_name = match.group(0)
@@ -153,16 +163,6 @@ class ConstructCP:
         '''
         :return: update cross product
         '''
-        # self.connected_to_initial_state_set.add(initial_state)
-        # for transition in self.cross_product.transitions:
-        #     if transition.from_state == initial_state:
-        #         self.connected_to_initial_state(transition.to_state)
-        # for transition in self.cross_product.transitions:
-        #     if transition.to_state == final_state:
-        #         self.connected_to_final_state(transition.from_state)
-        # print("connected to initial state: ", self.connected_to_initial_state_set)
-        # print("connected to final state: ", self.connected_to_final_state_set)
-        # get the conjunction of self.connected_to_initial_state_set and self.connected_to_final_state_set
         self.cross_product.connected_states = self.connected_to_initial_state_set & self.connected_to_final_state_set
         self.cross_product.connected_states.add(initial_state)
         self.cross_product.connected_states.add(final_state)
@@ -355,42 +355,3 @@ class ConstructCP:
 
         fr.outgoing.add(tran)
         to.incoming.add(tran)
-
-    # if __name__ == "__main__":
-    # pn, im, fm = pm4py.read_pnml('data/rtf_test.pnml', auto_guess_final_marking=True)
-    # symbol_list = ['Create Fine', 'Send Fine', 'Insert Fine Notification', 'Insert Date Appeal to Prefecture', 'Send Appeal to Prefecture', 'Receive Result Appeal from Prefecture', 'Notify Result Appeal to Offender', 'Add penalty', 'Send for Credit Collection']
-    #
-    #
-    # trace_ot, trace_it = create_dfa_from_list(symbol_list)
-    # srg_it, srg_ot = construct_stochastic_reachability_graph(pn, im)
-    # CP = ConstructCP()
-    # res_cp = CP.get_cross_product(trace_it,
-    #                               trace_ot,
-    #                               srg_it,
-    #                               srg_ot)
-    # gviz = visualize_stochastic_reachability.visualize(res_cp)
-    # visualize_stochastic_reachability.view(gviz)
-
-    '''--------------------------------------------------------------------------------------------------------------'''
-
-    # pn, im, fm = pm4py.read_pnml('data/rtf_test.pnml', auto_guess_final_marking=True)
-    # srg_it, srg_ot = construct_stochastic_reachability_graph(pn, im)
-    #
-    # immutable_srg_it = Map(srg_it)
-    # immutable_srg_ot = Map(srg_ot)
-    #
-    # log = xes_importer.apply('data/road_variants.xes')
-    # for i in range(len(log)):
-    #     alignments_result = alignments.apply_trace(log[i], pn, im, fm)
-    #
-    #     if alignments_result['fitness'] == 1:
-    #         trace_ot, trace_it = create_dfa_from_list([event['concept:name'] for event in log[i]])
-    #         print('case:', i, " ", [event['concept:name'] for event in log[i]])
-    #         CP = ConstructCP()
-    #         res_cp = CP.get_cross_product(trace_it,
-    #                                       trace_ot,
-    #                                       immutable_srg_it,
-    #                                       immutable_srg_ot)
-
-    # gviz = visualize_stochastic_reachability.visualize(res_cp)
-    # visualize_stochastic_reachability.view(gviz)

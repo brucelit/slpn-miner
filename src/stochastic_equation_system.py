@@ -1,7 +1,9 @@
 # This file contains the function to generate the equation system for the stochastic cross product.
 import re
+import logging
 from sympy import Eq, solve, Symbol
 
+logging.getLogger().setLevel(logging.DEBUG)
 
 def get_equation_system(cross_product, initial_state, final_state):
     '''

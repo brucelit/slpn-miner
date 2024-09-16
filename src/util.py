@@ -1,4 +1,5 @@
 import re
+import logging
 
 from pm4py.algo.conformance.alignments.petri_net import algorithm as alignments
 from pm4py.objects.log.obj import EventLog, Trace
@@ -9,6 +10,7 @@ from stochastic_reachability_graph import construct_stochastic_reachability_grap
 from trace_dfa import create_dfa_from_list
 from pm4py.algo.filtering.log.variants import variants_filter
 
+logging.getLogger().setLevel(logging.DEBUG)
 
 def setup(log, pn, im, fm):
     # get trace and its probability
@@ -46,7 +48,7 @@ def setup(log, pn, im, fm):
     for trace, weight in trace_prob_dict.items():
         for i in range(len(log_variants)):
             if trace == tuple(event['concept:name'] for event in log_variants[i]):
-                #   get trace probability
+                # get trace probability
                 weight_result = float(weight)
                 # get trace incoming and outgoing transitions
                 trace_ot, trace_it = create_dfa_from_list([event['concept:name'] for event in log_variants[i]])
@@ -55,11 +57,17 @@ def setup(log, pn, im, fm):
                                                            trace_ot,
                                                            srg_it,
                                                            srg_ot)
-                print("weight: ", weight, symbolic_trace_prob)
-
+                if symbolic_trace_prob == "0":
+                    break
                 sub_obj = [symbolic_trace_prob, weight_result]
                 obj2add.append(sub_obj)
                 break
+    covered_trace = sum(float(sublist[1]) for sublist in obj2add)
+    if len(obj2add) == 0:
+        logging.warning("No traces fit the model, the stochastic discovery will fail. Please check the log and the "
+                        "model.")
+    else:
+        logging.info("The stochastic discovery covers {:.2%} of the traces from the log.".format(covered_trace))
     return obj2add, var_name2idx_map, var_idx2name_map, var_lst
 
 

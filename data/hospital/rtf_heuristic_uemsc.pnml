@@ -1,0 +1,148 @@
+stochastic labelled Petri net
+# number of places
+11
+# initial marking
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+1
+# number of transitions
+13
+# transition 0
+label Payment
+# weight
+0.761
+# number of input places
+1
+1
+# number of output places
+1
+7
+# transition 1
+silent
+# weight
+1.000
+# number of input places
+1
+4
+# number of output places
+1
+8
+# transition 2
+silent
+# weight
+0.361
+# number of input places
+1
+3
+# number of output places
+1
+8
+# transition 3
+silent
+# weight
+0.590
+# number of input places
+1
+2
+# number of output places
+1
+1
+# transition 4
+silent
+# weight
+0.997
+# number of input places
+1
+3
+# number of output places
+1
+0
+# transition 5
+silent
+# weight
+0.984
+# number of input places
+1
+2
+# number of output places
+1
+9
+# transition 6
+label Insert Fine Notification
+# weight
+1.000
+# number of input places
+1
+0
+# number of output places
+1
+5
+# transition 7
+label Send for Credit Collection
+# weight
+0.911
+# number of input places
+1
+6
+# number of output places
+1
+4
+# transition 8
+label Send Fine
+# weight
+1.000
+# number of input places
+1
+9
+# number of output places
+1
+3
+# transition 9
+label Add penalty
+# weight
+1.000
+# number of input places
+1
+5
+# number of output places
+1
+6
+# transition 10
+silent
+# weight
+0.338
+# number of input places
+1
+2
+# number of output places
+2
+1
+9
+# transition 11
+silent
+# weight
+1.000
+# number of input places
+1
+7
+# number of output places
+1
+8
+# transition 12
+label Create Fine
+# weight
+1.000
+# number of input places
+1
+10
+# number of output places
+1
+2

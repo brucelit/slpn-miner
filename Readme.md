@@ -19,7 +19,7 @@ Take the Entropic Relevance-based stochastic discovery algorithm as an example, 
 Change the input and output path for your log and petri net, and slpn in the main.py file.
 
 ```python
-    import pm4py
+import pm4py
 
 from pm4py.objects.petri_net.utils import final_marking, initial_marking
 from src.slpn_opt_uemsc_discovery import optimize_with_uemsc
