@@ -2,7 +2,7 @@ def calculate_inverse_poland_expression(inverse_poland_expression, str_to_idx, v
     result = 0
     calculate_stack = []
     for str_val in inverse_poland_expression:
-        if str_val in ['+', '-', '*', '/']:
+        if str_val in {'+', '-', '*', '/'}:
             # Do the calculation for two variables.
             p1 = calculate_stack.pop()
             p2 = calculate_stack.pop()
@@ -58,7 +58,7 @@ def get_inverse_poland_expression(exp):
                 num += exp[i]
                 i += 1
             reverse_polish.append(num)
-        elif exp[i] in ['+', '-', '*', '/', '(', ')']:
+        elif exp[i] in {'+', '-', '*', '/', '(', ')'}:
             op = exp[i]
             if op == '(':
                 operator.append(op)
@@ -66,14 +66,14 @@ def get_inverse_poland_expression(exp):
                 while operator[-1] != '(':
                     reverse_polish.append(operator.pop())
                 operator.pop()
-            elif op in ['+', '-']:
+            elif op in {'+', '-'}:
                 if operator[-1] == '(':
                     operator.append(op)
                 else:
                     while operator[-1] != '#' and operator[-1] != '(':
                         reverse_polish.append(operator.pop())
                     operator.append(op)
-            elif op in ['*', '/']:
+            elif op in {'*', '/'}:
                 if operator[-1] == '(':
                     operator.append(op)
                 else:
