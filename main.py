@@ -2,22 +2,23 @@ import pm4py
 import logging
 
 from pm4py.objects.petri_net.utils import final_marking, initial_marking
-from slpn_miner.src.slpn_opt_uemsc_discovery import optimize_with_uemsc
-from slpn_miner.src.slpn_visualiser import visualize_slpn, view
 from pm4py.objects.log.importer.xes import importer as xes_importer
-from .util import get_slpn
-from .slpn_exporter import export_slpn, export_slpn_xml
 from pm4py.objects.petri_net.utils import check_soundness
 from pm4py.visualization.transition_system import visualizer as ts_visualizer
+
+from src.slpn_opt_uemsc_discovery import optimize_with_uemsc
+from src.slpn_visualiser import visualize_slpn, view
+from src.util import get_slpn
+from src.slpn_exporter import export_slpn, export_slpn_xml
 
 logging.getLogger().setLevel(logging.INFO)
 
 if __name__ == '__main__':
     # import log
-    log = xes_importer.apply('../data/road/Road_Traffic_Fine_Management_Process.xes')
+    log = xes_importer.apply('data/road/road.xes')
 
     #  import petri nets
-    pn, im, fm = pm4py.read_pnml('../data/road/road_id0.2.pnml', auto_guess_final_marking=True)
+    pn, im, fm = pm4py.read_pnml('data/road/road_id0.2.pnml', auto_guess_final_marking=True)
     fm = final_marking.discover_final_marking(pn)
     im = initial_marking.discover_initial_marking(pn)
 
@@ -38,7 +39,7 @@ if __name__ == '__main__':
     view(gviz)
 
     # export .slpn formart slpn
-    export_slpn("../data/road/road_id0.2_uemsc.slpn", place_in_im_num, place2num, t2l, t2ip_num, t2op_num, trans_weight_dict)
+    export_slpn("data/road/road_id0.2_uemsc.slpn", place_in_im_num, place2num, t2l, t2ip_num, t2op_num, trans_weight_dict)
 
     # export .xml format slpn
-    export_slpn_xml("../data/road/rtf_heuristic_uemsc.pnml", pn,im, trans_weight_dict)
+    export_slpn_xml("data/road/rtf_heuristic_uemsc.pnml", pn, im, trans_weight_dict)

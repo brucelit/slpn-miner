@@ -1,14 +1,14 @@
 import re
 import logging
 
-from pm4py.algo.conformance.alignments.petri_net import algorithm as alignments
 from pm4py.objects.log.obj import EventLog, Trace
-from src.log_util import get_stochastic_language
-from stochastic_cross_product import ConstructCP
-from slang_importer import parse_slang_file
-from stochastic_reachability_graph import construct_stochastic_reachability_graph
-from trace_dfa import create_dfa_from_list
 from pm4py.algo.filtering.log.variants import variants_filter
+
+from src.log_util import get_stochastic_language
+from src.stochastic_cross_product import ConstructCP
+from src.stochastic_reachability_graph import construct_stochastic_reachability_graph
+from src.trace_dfa import create_dfa_from_list
+
 
 logging.getLogger().setLevel(logging.DEBUG)
 

@@ -4,11 +4,12 @@ import sys
 import pm4py
 import scipy
 
-from src.slpn_visualiser import visualize_slpn, view
-from symbolic_conversion import calculate_inverse_poland_expression, get_inverse_poland_expression
 from pm4py.objects.log.importer.xes import importer as xes_importer
-from util import setup, get_slpn
-from slpn_exporter import export_slpn, export_slpn_xml
+
+from src.slpn_visualiser import visualize_slpn, view
+from src.symbolic_conversion import calculate_inverse_poland_expression, get_inverse_poland_expression
+from src.util import setup, get_slpn
+from src.slpn_exporter import export_slpn, export_slpn_xml
 
 
 def optimize_with_er(log, pn, im, fm):

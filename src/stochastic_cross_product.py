@@ -3,10 +3,9 @@
 import copy
 import logging
 import re
-import stochastic_transition_system
 
-from stochastic_equation_system import get_equation_system, expand_powers
-from stochastic_transition_system import StochasticTransitionSystem
+from src.stochastic_equation_system import get_equation_system, expand_powers
+from src.stochastic_transition_system import StochasticTransitionSystem
 
 logging.getLogger().setLevel(logging.DEBUG)
 
@@ -343,7 +342,7 @@ class ConstructCP:
         :param original_t_name:
         :param new_t_name:
         """
-        tran = stochastic_transition_system.StochasticTransitionSystem.Transition(
+        tran = StochasticTransitionSystem.Transition(
             str(new_t_name),
             original_t_name,
             t_label,
