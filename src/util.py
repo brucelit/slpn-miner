@@ -48,10 +48,10 @@ def setup(log, pn, im, fm):
 
     covered_trace = sum(float(sublist[1]) for sublist in obj2add)
     if len(obj2add) == 0:
-        logging.warning("No traces fit the model, the stochastic discovery will fail. Please check the log and the "
-                        "model.")
+        logging.warning("No traces fit the model, the stochastic discovery will fail. "
+                        "Please check the log and the model.")
     else:
-        logging.info("The stochastic discovery covers {:.2%} of the traces from the log.".format(covered_trace))
+        logging.info(f"The stochastic discovery covers {covered_trace:.2f} of the traces from the log.")
 
     return obj2add, var_name2idx_map, var_idx2name_map, var_lst
 

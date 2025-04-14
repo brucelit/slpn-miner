@@ -13,13 +13,13 @@ logging.getLogger().setLevel(logging.DEBUG)
 def set_and_get_initial_state(trace_incoming_transitions,
                               srg_incoming_transitions
                               ):
-    '''
+    """
 
     :param trace_incoming_transitions:
     :param srg_incoming_transitions:
     :param cross_product:
     :return: the initial states in trace and srg
-    '''
+    """
     for s1 in trace_incoming_transitions:
         if trace_incoming_transitions[s1] is None:
             for s2 in srg_incoming_transitions:
@@ -39,14 +39,14 @@ class ConstructCP:
                           trace_outgoing_transitions,
                           srg_incoming_transitions,
                           srg_outgoing_transitions):
-        '''
+        """
 
         :param trace_incoming_transitions:
         :param trace_outgoing_transitions:
         :param srg_incoming_transitions:
         :param srg_outgoing_transitions:
         :return: a cross product as a stochastic transition system between trace and srg
-        '''
+        """
         self.cross_product.connected_states = set()
         self.boundary_states_in_rsg = dict()
         self.cross_product = StochasticTransitionSystem()
@@ -159,28 +159,28 @@ class ConstructCP:
                 return transition.transition_prob
 
     def connected(self, initial_state, final_state):
-        '''
+        """
         :return: update cross product
-        '''
+        """
         self.cross_product.connected_states = self.connected_to_initial_state_set & self.connected_to_final_state_set
         self.cross_product.connected_states.add(initial_state)
         self.cross_product.connected_states.add(final_state)
 
     def connected_to_initial_state(self, state_to_explore):
-        '''
+        """
 
         :return: update cross product
-        '''
+        """
         for transition in self.cross_product.transitions:
             if transition.from_state == state_to_explore:
                 self.connected_to_initial_state_set.add(transition.to_state)
                 self.connected_to_initial_state(transition.to_state)
 
     def connected_to_final_state(self, state_to_explore):
-        '''
+        """
 
         :return: update cross product
-        '''
+        """
         for transition in self.cross_product.transitions:
             if transition.to_state == state_to_explore:
                 self.connected_to_final_state_set.add(transition.from_state)
@@ -193,7 +193,7 @@ class ConstructCP:
                          srg_outgoing_transitions,
                          srg_current_state,
                          ):
-        '''
+        """
 
         :param trace_outgoing_transitions:
         :param trace_transition_label:
@@ -202,7 +202,7 @@ class ConstructCP:
         :param srg_current_state:
         :param non_silent_tansition_num: count the time we observe non-silent transitions
         :return: no return
-        '''
+        """
         state_name = str(trace_current_state) + str(srg_current_state)
 
         # iterate until find the matching state with same transition_label
