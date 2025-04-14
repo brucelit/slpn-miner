@@ -14,7 +14,7 @@ logging.getLogger().setLevel(logging.DEBUG)
 
 def setup(log, pn, im, fm):
     # get trace and its probability
-    trace_prob_dict = get_stochastic_language(log)
+    stochastic_lang = get_stochastic_language(log)
 
     # get the log variants
     variants = variants_filter.get_variants(log)
@@ -45,23 +45,18 @@ def setup(log, pn, im, fm):
     obj2add = []
 
     # iterate each trace
-    for trace, weight in trace_prob_dict.items():
-        for i in range(len(log_variants)):
-            if trace == tuple(event['concept:name'] for event in log_variants[i]):
-                # get trace probability
-                weight_result = float(weight)
-                # get trace incoming and outgoing transitions
-                trace_ot, trace_it = create_dfa_from_list([event['concept:name'] for event in log_variants[i]])
-                CP = ConstructCP()
-                symbolic_trace_prob = CP.get_cross_product(trace_it,
-                                                           trace_ot,
-                                                           srg_it,
-                                                           srg_ot)
-                if symbolic_trace_prob == "0":
-                    break
-                sub_obj = [symbolic_trace_prob, weight_result]
-                obj2add.append(sub_obj)
-                break
+    for trace, weight in stochastic_lang.items():
+        # get trace probability
+        weight_result = float(weight)
+        # get trace incoming and outgoing transitions
+        trace_ot, trace_it = create_dfa_from_list(trace)
+        CP = ConstructCP()
+        symbolic_trace_prob = CP.get_cross_product(trace_it, trace_ot, srg_it, srg_ot)
+        if symbolic_trace_prob == "0":
+            continue
+        sub_obj = [symbolic_trace_prob, weight_result]
+        obj2add.append(sub_obj)
+
     covered_trace = sum(float(sublist[1]) for sublist in obj2add)
     if len(obj2add) == 0:
         logging.warning("No traces fit the model, the stochastic discovery will fail. Please check the log and the "
