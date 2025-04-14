@@ -1,11 +1,13 @@
-import pm4py
-import scipy
+from itertools import chain
 
+import scipy
+import numba
+
+import pm4py
 from pm4py.objects.petri_net.utils import final_marking, initial_marking
 from pm4py.objects.log.importer.xes import importer as xes_importer
 
-from src.slpn_visualiser import visualize_slpn, view
-from src.symbolic_conversion import calculate_inverse_poland_expression, get_inverse_poland_expression
+from src.symbolic_conversion import *
 from src.util import setup, get_slpn
 from src.slpn_exporter import export_slpn, export_slpn_xml
 
@@ -41,6 +43,18 @@ def optimize_with_basin_hopping(var_lst, obj_func):
     return res.x
 
 
+@numba.njit()
+def uemsc_objective_function(inverse_poland_exprs, trace_probs, constants_lookup, x):
+    obj_func = 0
+    for idx, inverse_poland_expr in enumerate(inverse_poland_exprs):
+        trace_prob = trace_probs[idx]
+        trace_in_slpn_prob = calculate_inverse_poland_expression_numba(inverse_poland_expr, constants_lookup, x)
+        after_inverse = max(trace_prob - trace_in_slpn_prob, 0)
+        obj_func += after_inverse
+
+    return obj_func
+
+
 def get_uemsc_obj_func(obj2add, var_name2idx_map):
     '''
     This is the obj func to optimize for unit-Earth Mover's Stochastic Conformance (uEMSC) measure
@@ -48,17 +62,47 @@ def get_uemsc_obj_func(obj2add, var_name2idx_map):
     :param var_name2idx_map: map transition to value in var_lst
     :return: the calculated objective function for uEMSC
     '''
-    def uemsc_objective_function(x):
-        obj_func = 0
-        for trace_symbolic_prob, trace_real_prob in obj2add:
-            trace_in_slpn_prob = calculate_inverse_poland_expression(
-                get_inverse_poland_expression(trace_symbolic_prob), var_name2idx_map, x)
-            after_inverse = max(trace_real_prob - trace_in_slpn_prob, 0)
-            obj_func += after_inverse
-        # print("uemsc:", obj_func)
+    inverse_obj2add = [
+        (get_inverse_poland_expression(trace_symbolic_prob), trace_real_prob)
+        for trace_symbolic_prob, trace_real_prob in obj2add
+    ]
 
-        return obj_func
-    return uemsc_objective_function
+    # Now map the expressions to indices:
+    #   - Negative for operators
+    #   - Positive < len(var_list) for variables
+    #   - Positive >= len(var_list) for constants
+    #       - Create a lookup array for these symbols
+    # For this to work, IDs must be continuously assigned
+    assert len(var_name2idx_map) == max(var_name2idx_map.values()) + 1, "IDs must be continuously assigned"
+
+    operator_indexes = {'+': plus_idx, '-': minus_idx, '*': prod_idx, '/': div_idx}
+
+    constant_symbols = {*chain(*(inverse_poland for inverse_poland, _ in inverse_obj2add))}
+    constant_symbols = constant_symbols - var_name2idx_map.keys() - operator_indexes.keys()
+    constant_symbols = list(constant_symbols)  # Put them on a list to order them
+
+    constant_indexes = {symbol: len(var_name2idx_map) + idx for idx, symbol in enumerate(constant_symbols)}
+    constants_lookup = np.array([float(symbol) for symbol in constant_symbols])
+
+    symbol_to_idx = {**var_name2idx_map, **constant_indexes, **operator_indexes}
+    inverse_obj2add = [
+        ([symbol_to_idx[symbol] for symbol in inverse_poland], trace_prob)
+        for inverse_poland, trace_prob in inverse_obj2add
+    ]
+
+    # Pack it into data types that are more friendly to numba
+    # The most important is packing the poland expressions into a numpy array
+    inverse_poland_exprs = [np.array(inverse_poland_exprs, dtype=np.int16)
+                            for inverse_poland_exprs, _ in inverse_obj2add]
+    inverse_poland_exprs = numba.typed.List(inverse_poland_exprs)
+    trace_probs = [trace_prob for _, trace_prob in inverse_obj2add]
+    trace_probs = np.array(trace_probs, dtype=np.float64)
+
+    # Capture the variables
+    def _uemsc_objective_function(x):
+        return uemsc_objective_function(inverse_poland_exprs, trace_probs, constants_lookup, x)
+
+    return _uemsc_objective_function
 
 
 if __name__ == '__main__':

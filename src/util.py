@@ -16,17 +16,6 @@ def setup(log, pn, im, fm):
     # get trace and its probability
     stochastic_lang = get_stochastic_language(log)
 
-    # get the log variants
-    variants = variants_filter.get_variants(log)
-    log_variants = EventLog()
-    for variant, traces in variants.items():
-        for trace in traces:
-            new_trace = Trace()
-            for event in trace:
-                new_trace.append(event)
-            log_variants.append(new_trace)
-            break
-
     # get the transition to weight mapping
     var_name2idx_map = {}
     var_idx2name_map = {}
@@ -63,6 +52,7 @@ def setup(log, pn, im, fm):
                         "model.")
     else:
         logging.info("The stochastic discovery covers {:.2%} of the traces from the log.".format(covered_trace))
+
     return obj2add, var_name2idx_map, var_idx2name_map, var_lst
 
 
