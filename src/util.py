@@ -1,31 +1,20 @@
 import re
 import logging
 
-from pm4py.algo.conformance.alignments.petri_net import algorithm as alignments
 from pm4py.objects.log.obj import EventLog, Trace
-from src.log_util import get_stochastic_language
-from stochastic_cross_product import ConstructCP
-from slang_importer import parse_slang_file
-from stochastic_reachability_graph import construct_stochastic_reachability_graph
-from trace_dfa import create_dfa_from_list
 from pm4py.algo.filtering.log.variants import variants_filter
+
+from src.log_util import get_stochastic_language
+from src.stochastic_cross_product import ConstructCP
+from src.stochastic_reachability_graph import construct_stochastic_reachability_graph
+from src.trace_dfa import create_dfa_from_list
+
 
 logging.getLogger().setLevel(logging.DEBUG)
 
 def setup(log, pn, im, fm):
     # get trace and its probability
-    trace_prob_dict = get_stochastic_language(log)
-
-    # get the log variants
-    variants = variants_filter.get_variants(log)
-    log_variants = EventLog()
-    for variant, traces in variants.items():
-        for trace in traces:
-            new_trace = Trace()
-            for event in trace:
-                new_trace.append(event)
-            log_variants.append(new_trace)
-            break
+    stochastic_lang = get_stochastic_language(log)
 
     # get the transition to weight mapping
     var_name2idx_map = {}
@@ -45,29 +34,25 @@ def setup(log, pn, im, fm):
     obj2add = []
 
     # iterate each trace
-    for trace, weight in trace_prob_dict.items():
-        for i in range(len(log_variants)):
-            if trace == tuple(event['concept:name'] for event in log_variants[i]):
-                # get trace probability
-                weight_result = float(weight)
-                # get trace incoming and outgoing transitions
-                trace_ot, trace_it = create_dfa_from_list([event['concept:name'] for event in log_variants[i]])
-                CP = ConstructCP()
-                symbolic_trace_prob = CP.get_cross_product(trace_it,
-                                                           trace_ot,
-                                                           srg_it,
-                                                           srg_ot)
-                if symbolic_trace_prob == "0":
-                    break
-                sub_obj = [symbolic_trace_prob, weight_result]
-                obj2add.append(sub_obj)
-                break
+    for trace, weight in stochastic_lang.items():
+        # get trace probability
+        weight_result = float(weight)
+        # get trace incoming and outgoing transitions
+        trace_ot, trace_it = create_dfa_from_list(trace)
+        CP = ConstructCP()
+        symbolic_trace_prob = CP.get_cross_product(trace_it, trace_ot, srg_it, srg_ot)
+        if symbolic_trace_prob == "0":
+            continue
+        sub_obj = [symbolic_trace_prob, weight_result]
+        obj2add.append(sub_obj)
+
     covered_trace = sum(float(sublist[1]) for sublist in obj2add)
     if len(obj2add) == 0:
-        logging.warning("No traces fit the model, the stochastic discovery will fail. Please check the log and the "
-                        "model.")
+        logging.warning("No traces fit the model, the stochastic discovery will fail. "
+                        "Please check the log and the model.")
     else:
-        logging.info("The stochastic discovery covers {:.2%} of the traces from the log.".format(covered_trace))
+        logging.info(f"The stochastic discovery covers {covered_trace:.2f} of the traces from the log.")
+
     return obj2add, var_name2idx_map, var_idx2name_map, var_lst
 
 

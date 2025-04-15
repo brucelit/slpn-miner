@@ -38,8 +38,8 @@ def get_stochastic_language(*args, **kwargs) -> Dict[List[str], fractions.Fracti
 
         all_values_sum = sum(vars.values())
         for x in vars:
-            vars[x] = fractions.Fraction(vars[x], all_values_sum)
-            # vars[x] = vars[x] / all_values_sum
+            # vars[x] = fractions.Fraction(vars[x], all_values_sum)
+            vars[x] = vars[x] / all_values_sum
         return vars
 
 
@@ -53,8 +53,8 @@ def get_trace_weight_dict(*args, **kwargs) -> Dict[List[str], fractions.Fraction
 
         all_values_sum = sum(vars.values())
         for x in vars:
-
-            vars[x] = fractions.Fraction(vars[x], all_values_sum)
+            # vars[x] = fractions.Fraction(vars[x], all_values_sum)
+            vars[x] = vars[x] / all_values_sum
         return vars
 
 def get_variants(log: EventLog, parameters: Optional[Dict[Union[str, Parameters], Any]] = None) -> Union[

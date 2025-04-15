@@ -88,10 +88,13 @@ def export_slpn_xml(output_path, petrinet, marking, trans2weight, final_marking=
         stochastic_information.set("version", "0.2")
         distribution_type = etree.SubElement(stochastic_information, "property")
         distribution_type.set("key", "distributionType")
-        distribution_type.text = "UNIFORM"
+        distribution_type.text = "IMMEDIATE"
+        training_data = etree.SubElement(stochastic_information, "property")
+        training_data.set("key", "trainingData")
+        training_data.text = ""
         distribution_parameters = etree.SubElement(stochastic_information, "property")
         distribution_parameters.set("key", "distributionParameters")
-        distribution_parameters.text = "0.0;200.0"
+        distribution_parameters.text = ""
         distribution_priority = etree.SubElement(stochastic_information, "property")
         distribution_priority.set("key", "priority")
         distribution_priority.text = "0"

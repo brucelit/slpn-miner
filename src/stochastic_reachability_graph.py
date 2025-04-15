@@ -6,7 +6,7 @@ from pm4py.objects.petri_net.utils import align_utils
 from pm4py.objects.transition_system import obj as ts
 from pm4py.util import exec_utils
 
-import stochastic_transition_system
+from src.stochastic_transition_system import StochasticTransitionSystem
 
 
 class Parameters(Enum):
@@ -85,7 +85,7 @@ def construct_stochatic_reachability_graph_from_flow(incoming_transitions, outgo
     if parameters is None:
         parameters = {}
 
-    re_gr = stochastic_transition_system.StochasticTransitionSystem()
+    re_gr = StochasticTransitionSystem()
     map_states = {}
 
     for s in incoming_transitions:
@@ -148,7 +148,7 @@ def construct_srg(incoming_transitions, outgoing_transitions, parameters=None):
     if parameters is None:
         parameters = {}
 
-    re_gr = stochastic_transition_system.StochasticTransitionSystem()
+    re_gr = StochasticTransitionSystem()
 
     map_states = {}
     srg_incoming_transitions = {}
@@ -202,8 +202,8 @@ def add_arc_from_to(new_t_id, original_t_id, t_label, t_prob, fr, to, stochastic
     -------
     None
     """
-    tran = stochastic_transition_system.StochasticTransitionSystem.Transition("t" + str(new_t_id), original_t_id,
-                                                                              t_label, t_prob, fr, to, data)
+    tran = StochasticTransitionSystem.Transition("t" + str(new_t_id), original_t_id,
+                                                 t_label, t_prob, fr, to, data)
     stochastic_ts.transitions.add(tran)
 
     fr.outgoing.add(tran)

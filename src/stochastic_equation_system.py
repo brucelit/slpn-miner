@@ -6,13 +6,13 @@ from sympy import Eq, solve, Symbol
 logging.getLogger().setLevel(logging.DEBUG)
 
 def get_equation_system(cross_product, initial_state, final_state):
-    '''
+    """
     This function generates the equation system for the stochastic cross product.
     :param cross_product:
     :param initial_state:
     :param final_state:
     :return: the symbolic representation of trace probability from the slpn
-    '''
+    """
     eqs = []
     variables = []
     state_to_variable_map = {}
@@ -54,11 +54,11 @@ def get_equation_system(cross_product, initial_state, final_state):
 
 
 def expand_powers(s):
-    '''
+    """
     This function expands the powers in the string.
     :param s:
     :return:
-    '''
+    """
     # Function to replace match with expanded form
     def replacer(match):
         var = match.group(1)
