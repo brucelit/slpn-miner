@@ -4,8 +4,8 @@ import copy
 import logging
 import re
 
-from src.stochastic_equation_system import get_equation_system, expand_powers
-from src.stochastic_transition_system import StochasticTransitionSystem
+from slpn_miner.stochastic_equation_system import get_equation_system, expand_powers
+from slpn_miner.stochastic_transition_system import StochasticTransitionSystem
 
 logging.getLogger().setLevel(logging.DEBUG)
 

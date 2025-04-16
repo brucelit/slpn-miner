@@ -6,7 +6,7 @@ from pm4py.objects.petri_net.utils import align_utils
 from pm4py.objects.transition_system import obj as ts
 from pm4py.util import exec_utils
 
-from src.stochastic_transition_system import StochasticTransitionSystem
+from slpn_miner.stochastic_transition_system import StochasticTransitionSystem
 
 
 class Parameters(Enum):

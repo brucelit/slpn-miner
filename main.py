@@ -6,10 +6,10 @@ from pm4py.objects.log.importer.xes import importer as xes_importer
 from pm4py.objects.petri_net.utils import check_soundness
 from pm4py.visualization.transition_system import visualizer as ts_visualizer
 
-from src.slpn_opt_uemsc_discovery import optimize_with_uemsc
-from src.slpn_visualiser import visualize_slpn, view
-from src.util import get_slpn
-from src.slpn_exporter import export_slpn, export_slpn_xml
+from slpn_miner.slpn_opt_uemsc_discovery import optimize_with_uemsc
+from slpn_miner.slpn_visualiser import visualize_slpn, view
+from slpn_miner.util import get_slpn
+from slpn_miner.slpn_exporter import export_slpn, export_slpn_xml
 
 logging.getLogger().setLevel(logging.INFO)
 
