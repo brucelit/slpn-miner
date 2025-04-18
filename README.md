@@ -23,8 +23,8 @@ import pm4py
 import logging
 
 from pm4py.objects.petri_net.utils import final_marking, initial_marking
-from src.slpn_opt_uemsc_discovery import optimize_with_uemsc
-from src.slpn_visualiser import visualize_slpn, view
+from slpn_miner.slpn_opt_uemsc_discovery import optimize_with_uemsc
+from slpn_miner.slpn_visualiser import visualize_slpn, view
 from pm4py.objects.log.importer.xes import importer as xes_importer
 from util import get_slpn
 from slpn_exporter import export_slpn, export_slpn_xml

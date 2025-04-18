@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "slpn_miner"
+version = "0.1.0"
+authors = [
+  { name="Tian Li", email="t.li@bpm.rwth-aachen.de" },
+]
+description = "Mine optimal SLPNs"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "GNU Affero General Public License v3 or later (AGPLv3+)" }
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "pm4py~=2.7.11",
+    "pandas~=2.2.2",
+    "lxml~=5.2.1",
+    "scipy~=1.13.1",
+    "sympy~=1.12",
+    "numba~=0.61.2",
+]
+
+[project.optional-dependencies]
+dev = []
+
+[project.scripts]
+
+[project.urls]
+"Homepage" = "https://github.com/brucelit/slpn-miner"

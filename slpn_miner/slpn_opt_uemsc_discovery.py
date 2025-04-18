@@ -7,9 +7,9 @@ import pm4py
 from pm4py.objects.petri_net.utils import final_marking, initial_marking
 from pm4py.objects.log.importer.xes import importer as xes_importer
 
-from src.symbolic_conversion import *
-from src.util import setup, get_slpn
-from src.slpn_exporter import export_slpn, export_slpn_xml
+from slpn_miner.symbolic_conversion import *
+from slpn_miner.util import setup, get_slpn
+from slpn_miner.slpn_exporter import export_slpn, export_slpn_xml
 
 
 def optimize_with_uemsc(log, pn, im, fm):
@@ -38,7 +38,8 @@ def optimize_with_basin_hopping(var_lst, obj_func):
     # define the method and bound
     minimizer_kwargs = {"method": "L-BFGS-B", "bounds": bds}
     # solve problem
-    res = scipy.optimize.basinhopping(obj_func, var_lst, minimizer_kwargs=minimizer_kwargs, niter=100, stepsize=0.00001)
+    res = scipy.optimize.basinhopping(obj_func, var_lst, minimizer_kwargs=minimizer_kwargs, disp=True,
+                                      niter=100, stepsize=0.00001)
     print(res)
     return res.x
 
