@@ -1,0 +1,9 @@
+pm4py~=2.7.11.11
+pandas~=2.2.2
+lxml~=5.2.1
+scipy~=1.13.1
+sympy~=1.12
+setuptools~=80.3.1
+graphviz~=0.21
+numba~=0.61.2
+numpy~=2.2.6
